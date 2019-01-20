@@ -25,6 +25,10 @@ public class CameraInterface {
     private boolean isPreviewing = false;
     private float mPreviewRate = -1f;
 
+    public boolean isPreviewing() {
+        return isPreviewing;
+    }
+
     private static CameraInterface mCameraInterface;
 
     public interface CamOpenOverCallback {
@@ -48,7 +52,9 @@ public class CameraInterface {
         mCamera = Camera.open(0);
         Log.d(TAG, "doOpenCamera: do camera  open over");
 
-        callback.cameraHasOpened();
+        if (callback != null) {
+            callback.cameraHasOpened();
+        }
     }
 
     public void doStartPreview(SurfaceHolder holder, float previewRate) {

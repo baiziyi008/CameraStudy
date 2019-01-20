@@ -1,54 +1,46 @@
 package com.mfx.camerastudy.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Point;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.mfx.camerastudy.view.CameraSurfaceView;
 import com.mfx.camerastudy.R;
 import com.mfx.camerastudy.utils.CameraInterface;
 import com.mfx.camerastudy.utils.DisplayUtil;
 
-public class MainActivity extends Activity implements CameraInterface.CamOpenOverCallback{
-    private static final String TAG = "MainActivity";
-    CameraSurfaceView mCameraSurfaceView;
-    ImageButton shutterButton;
-    float   previewRate = -1f;
+/**
+ * Created by mfx on 2018/7/21.
+ */
+
+public class GlSurfaceActivity extends Activity {
+    private static final String TAG = "GlSurfaceActivity";
+    private ImageButton shutterButton;;
+    private GLSurfaceView   mGLSurfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                CameraInterface.getInstance().doOpenCamera(MainActivity.this);
-            }
-        });
-        thread.start();
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_glsurface);
         initUI();
         initParams();
-        shutterButton.setOnClickListener(new BtnListeners());
+        shutterButton.setOnClickListener(new GlSurfaceActivity.BtnListeners());
     }
 
     private void initParams() {
-        ViewGroup.LayoutParams params =mCameraSurfaceView.getLayoutParams();
+        ViewGroup.LayoutParams params =mGLSurfaceView.getLayoutParams();
         Point p = DisplayUtil.getScreenMetrics(this);
         params.width =  p.x;
         params.height = p.y;
         float ratio = 640f/480f;
         float w = params.height / ratio;
         params.width = (int) w;
-        previewRate = DisplayUtil.getScreenRate(this);
-        Log.d(TAG, "initParams: surfaceview  width="+params.width + "  height="+params.height);
-        mCameraSurfaceView.setLayoutParams(params);
+        Log.d(TAG, "initParams: GLsurfaceview  width="+params.width + "  height="+params.height);
+        mGLSurfaceView.setLayoutParams(params);
 
         ViewGroup.LayoutParams p2 = shutterButton.getLayoutParams();
         p2.width = DisplayUtil.dip2px(this, 80);
@@ -58,15 +50,10 @@ public class MainActivity extends Activity implements CameraInterface.CamOpenOve
 
 
     private void initUI() {
-        mCameraSurfaceView = findViewById(R.id.camera_surfaceview);
+        mGLSurfaceView = findViewById(R.id.camera_glsurfaceview);
         shutterButton = findViewById(R.id.btn_shutter);
     }
 
-    @Override
-    public void cameraHasOpened() {
-        SurfaceHolder holder = mCameraSurfaceView.getSurfaceHolder();
-        CameraInterface.getInstance().doStartPreview(holder, previewRate);
-    }
     private class BtnListeners implements View.OnClickListener {
 
         @Override
@@ -83,4 +70,17 @@ public class MainActivity extends Activity implements CameraInterface.CamOpenOve
     }
 
 
+    @Override
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        mGLSurfaceView.bringToFront();
+    }
+
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        mGLSurfaceView.onPause();
+    }
 }
