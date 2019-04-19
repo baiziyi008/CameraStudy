@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.TextureView;
 
+import com.mfx.camerastudy.activity.TextureActivity;
 import com.mfx.camerastudy.utils.CameraInterface;
 
 /**

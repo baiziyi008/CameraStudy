@@ -24,6 +24,9 @@ public class CameraInterface {
     private Camera.Parameters mParams;
     private boolean isPreviewing = false;
     private float mPreviewRate = -1f;
+    private Camera.PreviewCallback mPreviewCallback;
+    private byte[] mImageCallbackBuffer = new byte[640
+            * 480 * 3 / 2];
 
     public boolean isPreviewing() {
         return isPreviewing;
@@ -47,6 +50,10 @@ public class CameraInterface {
         return mCameraInterface;
     }
 
+    public void setPreviewCallback(Camera.PreviewCallback previewCallback) {
+        mPreviewCallback = previewCallback;
+    }
+
     public void doOpenCamera(CamOpenOverCallback callback) {
         Log.d(TAG, "doOpenCamera: do camera open .....");
         mCamera = Camera.open(0);
@@ -67,6 +74,8 @@ public class CameraInterface {
 
             try {
                 mCamera.setPreviewDisplay(holder);
+//                mCamera.addCallbackBuffer(mImageCallbackBuffer);
+//                mCamera.setPreviewCallbackWithBuffer(mPreviewCallback);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -74,7 +83,7 @@ public class CameraInterface {
         }
     }
 
-    public void doStartPreview(SurfaceTexture texture, float previewRate){
+    public void doStartPreview(SurfaceTexture texture, float previewRate ){
         Log.d(TAG, "doStartPreview: ");
         if (isPreviewing) {
             mCamera.stopPreview();
@@ -83,6 +92,8 @@ public class CameraInterface {
         if (mCamera != null){
             try {
                 mCamera.setPreviewTexture(texture);
+//                mCamera.addCallbackBuffer(mImageCallbackBuffer);
+//                mCamera.setPreviewCallbackWithBuffer(mPreviewCallback);
             } catch (IOException e) {
                 e.printStackTrace();
             }

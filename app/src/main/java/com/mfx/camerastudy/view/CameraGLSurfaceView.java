@@ -11,6 +11,7 @@ import android.view.SurfaceView;
 
 import com.mfx.camerastudy.preview.DirectDrawer;
 import com.mfx.camerastudy.utils.CameraInterface;
+import com.mfx.camerastudy.utils.ICamera;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -25,6 +26,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
     private SurfaceTexture  mSurfaceTexture;
     private int mTextureId = -1;
     private DirectDrawer mDrawer;
+    private ICamera mICamera;
 
     public CameraGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -47,7 +49,8 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
         mSurfaceTexture = new SurfaceTexture(mTextureId);
         mSurfaceTexture.setOnFrameAvailableListener(this);
         mDrawer = new DirectDrawer(mTextureId);
-        CameraInterface.getInstance().doOpenCamera(null);
+//        CameraInterface.getInstance().doOpenCamera(null);
+        mICamera.openCamera(null, 1);
     }
 
     @Override
